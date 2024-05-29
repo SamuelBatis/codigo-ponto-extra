@@ -16,19 +16,36 @@ public class AnalisePaciente {
 
   public static void resultadoSaida(FilaPilha fila) {
     int paciente = 1;
+    int bestPaciente = -1;
+    double minVariance = Double.MAX_VALUE;
+    double bestMean = Double.MIN_VALUE;
+
     while (!fila.vazia()) {
       int valor[] = new int[21];
       for (int i = 0; i <= 20; i++) {
         valor[i] = (int) fila.desenfileirar();
       }
       Estatistica esta = new Estatistica();
+      double mean = esta.media(valor);
+      double variance = esta.variancia(valor);
+
       print("Paciente: " + paciente);
-      print("Media: " + String.format("%2.2f", esta.media(valor)));
+      print("Media: " + String.format("%2.2f", mean));
       print("Desvio Padrao: " + String.format("%2.2f", esta.desvPad(valor)));
-      print("variancia: " + String.format("%2.2f", esta.variancia(valor)));
+      print("variancia: " + String.format("%2.2f", variance));
       print("\n");
+
+      if (variance < minVariance || (variance == minVariance && mean > bestMean)) {
+        minVariance = variance;
+        bestMean = mean;
+        bestPaciente = paciente;
+      }
       paciente++;
     }
+
+    print("Paciente com maior regularidade: " + bestPaciente);
+    print("Variância: " + String.format("%2.2f", minVariance));
+    print("Média: " + String.format("%2.2f", bestMean));
   }
 
   public static void calcular(FilaPilha fila, int np) {
